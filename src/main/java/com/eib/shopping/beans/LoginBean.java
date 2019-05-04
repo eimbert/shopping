@@ -1,4 +1,4 @@
-package com.eib.shopping;
+package com.eib.shopping.beans;
 
 public class LoginBean {
 

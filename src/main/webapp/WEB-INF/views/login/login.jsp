@@ -15,29 +15,31 @@
 	<div class="container">
 		<h2>Bienvenido a mi tienda.</h2>
 		<br> <br>
-		<table>
-		<tr>
-		<form:form name="product" method="POST" action="/shopping/product">
-			<div class="form-group">
-				<label for="exampleInputEmail1">Usuario</label> <input type="text"
-					class="form-control" id="exampleInputEmail1"
-					aria-describedby="emailHelp" placeholder="Enter user"
-					name="nameUser">
-			</div>
-			<div class="form-group">
-				<label for="exampleInputPassword1">Password</label> <input
-					type="password" class="form-control" id="exampleInputPassword1"
-					placeholder="Password" name="password">
-			</div>
-
-			<button type="submit" class="btn btn-primary">Iniciar  sesión</button>
-		</form:form>
-		</tr>
-		<tr>
-		<form:form name="submitForm" method="post" value="product">
-			<button type="submit" class="btn btn-warning">Nuevo Usuario</button>
-		</form:form>
-		</tr>
+		<table  style="border-spacing: 10px">
+			<tr>
+				<form:form name="product" method="POST" action="/shopping/login">
+					<div class="form-group">
+						<label for="exampleInputEmail1">Usuario</label> <input type="text"
+							class="form-control" id="exampleInputEmail1"
+							aria-describedby="emailHelp" placeholder="Enter user"
+							name="userName">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputPassword1">Password</label> <input
+							type="password" class="form-control" id="exampleInputPassword1"
+							placeholder="Password" name="password">
+					</div>
+					<h6> ${msg} </h6>
+					<button type="submit" class="btn btn-primary">Iniciar
+						sesión</button>
+				</form:form>
+			</tr>
+			<tr>
+				<form:form name="submitForm" method="post" action="/shopping/newuser">
+					<button type="submit" class="btn btn-warning">Nuevo
+						Usuario</button>
+				</form:form>
+			</tr>
 		</table>
 	</div>
 </body>
