@@ -35,8 +35,7 @@
 			</ul>
 			<span class="navbar-text">Hola &nbsp; ${userName} &nbsp;&nbsp;</span>
 			<div class="thumbnail text-center">
-			<a class="navbar-brand" href="#">
-			
+				<a class="navbar-brand" href="${pageContext.request.contextPath}/product/cart">
     			<img src="${pageContext.request.contextPath}/resources/basket.png" width="30" height="30" class="d-inline-block align-top" alt=""></a>
     			<div class="caption"><p>${itemsInCart}</p></div>
     		</div>

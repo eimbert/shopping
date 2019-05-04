@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +46,7 @@ public class AccessControl {
 			mav = new ModelAndView("/products/index");
 			ProductModel productModel = new ProductModel();
 			mav.addObject("products", productModel.findAll());
-			//mav.addObject("itemsInCart", itemsInCart(login.getUserName())); 
+			mav.addObject("itemsInCart", itemsInCart(login.getUserName())); 
 			activeUser=login.getUserName();
 			nameUser=login.getUserName();
 					
@@ -78,7 +79,7 @@ public class AccessControl {
 		ProductModel productModel = new ProductModel();
 		mav.addObject("products", productModel.findAll());
 		mav.addObject("userName", client.getName());
-		//mav.addObject("itemsInCart", itemsInCart(client.getUser())); 
+		mav.addObject("itemsInCart", itemsInCart(client.getUser())); 
 		activeUser=client.getUser();
 		nameUser = client.getName();
 		
@@ -87,8 +88,6 @@ public class AccessControl {
 	
 	@RequestMapping(value = "buy/{id}", method = RequestMethod.GET)
 	public ModelAndView buy(@PathVariable("id") String id, HttpServletResponse response) {
-		
-		System.out.printf("Hola");
 		
 		ProductModel productModel = new ProductModel();
 		
@@ -108,17 +107,36 @@ public class AccessControl {
 		ModelAndView mav = new ModelAndView("products/index");
 		mav.addObject("products", productModel.findAll());
 		mav.addObject("userName", nameUser);
-		mav.addObject("itemsInCart", itemsInCart(activeUser, id)); 
+		mav.addObject("itemsInCart", itemsInCart(activeUser)); 
 			
 		return mav;
 	}
 	
-	public int itemsInCart(String user, String id) {
+	@RequestMapping(value = "cart", method = RequestMethod.GET)
+	public ModelAndView buy(HttpServletRequest request, HttpServletResponse response) {
+		
+		List<Item> cartItems = new ArrayList<Item>();
+		Set<String>  i= cartClient.get(activeUser).keySet();
+		for(String clave: i) {
+			 cartItems.add(cartClient.get(activeUser).get(clave));
+		}
+		ModelAndView mav = new ModelAndView("cart/list_cart_products");
+		mav.addObject("cartList", cartItems ); 
+			
+		return mav;
+	}
+	
+	
+	
+	public int itemsInCart(String user) {
 		int itemsTotales = 0;
 	
 		if(cartClient.containsKey(user)) {
-			itemsTotales+= cartClient.get(user).size();
-			itemsTotales+= cartClient.get(user).get(id).getQuantity();
+			
+			Set<String>  i= cartClient.get(user).keySet();
+			for(String clave: i) {
+				itemsTotales+= cartClient.get(user).get(clave).getQuantity();
+			}
 			return itemsTotales;
 		}
 		return 0;
