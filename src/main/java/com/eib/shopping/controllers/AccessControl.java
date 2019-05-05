@@ -1,54 +1,43 @@
 package com.eib.shopping.controllers;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.eib.shopping.Item;
-import com.eib.shopping.Product;
 import com.eib.shopping.ProductModel;
 import com.eib.shopping.beans.ClientBean;
 import com.eib.shopping.beans.LoginBean;
-import com.sun.javafx.collections.MappingChange.Map;
+import com.eib.shopping.data.DataAccess;
+
 
 @Controller
 @RequestMapping(value = {"product", "/*", "/buy", "/buy/"})
 public class AccessControl {
-	private HashMap<String, String> controlAccess = new HashMap<String, String>();
-	private HashMap<String, HashMap<String, Item>> cartClient = new HashMap<String, HashMap<String,Item>>();
-	private String activeUser = null;
-	private String nameUser = null;
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ModelAndView index(HttpServletRequest request, HttpServletResponse response, @ModelAttribute("login") LoginBean login) {
 		
 		ModelAndView mav = null;
 		
-		controlAccess.put("Enrique", "12345");
+		DataAccess.controlAccess.put("Enrique", "12345");
 		
-		if(controlAccess.containsKey(login.getUserName()) && (controlAccess.get(login.getUserName()).equals(login.getPassword()))) {
+		if(DataAccess.controlAccess.containsKey(login.getUserName()) && (DataAccess.controlAccess.get(login.getUserName()).equals(login.getPassword()))) {
 			mav = new ModelAndView("/products/index");
 			ProductModel productModel = new ProductModel();
 			mav.addObject("products", productModel.findAll());
-			mav.addObject("itemsInCart", itemsInCart(login.getUserName())); 
-			activeUser=login.getUserName();
-			nameUser=login.getUserName();
+			mav.addObject("itemsInCart", DataAccess.itemsInCart(login.getUserName())); 
+			DataAccess.activeUser=login.getUserName();
+			DataAccess.nameUser=login.getUserName();
 					
 			return mav;
 		}else {
@@ -71,7 +60,7 @@ public class AccessControl {
 	@RequestMapping(value = "/user", method = RequestMethod.POST)
 	public ModelAndView addNewUser(HttpServletRequest request, HttpServletResponse response, @ModelAttribute("newUser") ClientBean client) {
 		
-		controlAccess.put(client.getUser(), client.getPassword());
+		DataAccess.controlAccess.put(client.getUser(), client.getPassword());
 		
 		ModelAndView mav = null;
 		
@@ -79,68 +68,13 @@ public class AccessControl {
 		ProductModel productModel = new ProductModel();
 		mav.addObject("products", productModel.findAll());
 		mav.addObject("userName", client.getName());
-		mav.addObject("itemsInCart", itemsInCart(client.getUser())); 
-		activeUser=client.getUser();
-		nameUser = client.getName();
+		mav.addObject("itemsInCart", DataAccess.itemsInCart(client.getUser())); 
+		DataAccess.activeUser=client.getUser();
+		DataAccess.nameUser = client.getName();
 		
 		return mav;
 	}
-	
-	@RequestMapping(value = "buy/{id}", method = RequestMethod.GET)
-	public ModelAndView buy(@PathVariable("id") String id, HttpServletResponse response) {
-		
-		ProductModel productModel = new ProductModel();
-		
-		if(activeUser!=null) {
-			if(cartClient.get(activeUser) == null) {
-				cartClient.put(activeUser, new HashMap<String,Item>());
-				cartClient.get(activeUser).put(id, new Item(productModel.find(id),1)); 
-			}else {
-				if(cartClient.get(activeUser).get(id)!=null)
-					cartClient.get(activeUser).get(id).setQuantity(cartClient.get(activeUser).get(id).getQuantity() + 1);
-				else {
-					cartClient.get(activeUser).put(id, new Item(productModel.find(id),1));
-				}
-			}
-		}
-		
-		ModelAndView mav = new ModelAndView("products/index");
-		mav.addObject("products", productModel.findAll());
-		mav.addObject("userName", nameUser);
-		mav.addObject("itemsInCart", itemsInCart(activeUser)); 
-			
-		return mav;
-	}
-	
-	@RequestMapping(value = "cart", method = RequestMethod.GET)
-	public ModelAndView buy(HttpServletRequest request, HttpServletResponse response) {
-		
-		List<Item> cartItems = new ArrayList<Item>();
-		Set<String>  i= cartClient.get(activeUser).keySet();
-		for(String clave: i) {
-			 cartItems.add(cartClient.get(activeUser).get(clave));
-		}
-		ModelAndView mav = new ModelAndView("cart/list_cart_products");
-		mav.addObject("cartList", cartItems ); 
-			
-		return mav;
-	}
-	
-	
-	
-	public int itemsInCart(String user) {
-		int itemsTotales = 0;
-	
-		if(cartClient.containsKey(user)) {
-			
-			Set<String>  i= cartClient.get(user).keySet();
-			for(String clave: i) {
-				itemsTotales+= cartClient.get(user).get(clave).getQuantity();
-			}
-			return itemsTotales;
-		}
-		return 0;
-	}
+
 }
 
 

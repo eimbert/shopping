@@ -31,7 +31,7 @@
 					</div>
 					<h6> ${msg} </h6>
 					<button type="submit" class="btn btn-primary">Iniciar
-						sesión</button>
+						sesión</button>&nbsp;
 				</form:form>
 			</tr>
 			<tr>

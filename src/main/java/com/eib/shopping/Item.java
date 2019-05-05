@@ -28,6 +28,15 @@ public class Item {
 		this.product = product;
 		this.quantity = quantity;
 	}
+	
+	public void addQuantity() {
+		quantity++;
+	}
+	
+	public void minusQuantity() {
+		quantity--;
+		if(quantity < 0) quantity = 0;
+	}
 
 }
 

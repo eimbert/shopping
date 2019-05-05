@@ -31,11 +31,11 @@
 				</a></li>
 				<li class="nav-item active"><a class="nav-link" href="#">Listado productos <span class="sr-only">(current)</span></a>
 				</li>
-				<li class="nav-item"><a class="nav-link" href="#">Cesta</a></li>
+				<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/cart/cart">Cesta</a></li>
 			</ul>
 			<span class="navbar-text">Hola &nbsp; ${userName} &nbsp;&nbsp;</span>
 			<div class="thumbnail text-center">
-				<a class="navbar-brand" href="${pageContext.request.contextPath}/product/cart">
+				<a class="navbar-brand" href="${pageContext.request.contextPath}/cart/cart">
     			<img src="${pageContext.request.contextPath}/resources/basket.png" width="30" height="30" class="d-inline-block align-top" alt=""></a>
     			<div class="caption"><p>${itemsInCart}</p></div>
     		</div>
