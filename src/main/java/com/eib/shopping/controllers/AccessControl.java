@@ -29,13 +29,14 @@ public class AccessControl {
 		
 		ModelAndView mav = null;
 		
-		DataAccess.controlAccess.put("Enrique", "12345");
+		//DataAccess.controlAccess.put("Enrique", "12345");
 		
 		if(DataAccess.controlAccess.containsKey(login.getUserName()) && (DataAccess.controlAccess.get(login.getUserName()).equals(login.getPassword()))) {
 			mav = new ModelAndView("/products/index");
 			ProductModel productModel = new ProductModel();
 			mav.addObject("products", productModel.findAll());
 			mav.addObject("itemsInCart", DataAccess.itemsInCart(login.getUserName())); 
+			DataAccess.sesions.put(request.getSession(), login.getUserName());
 			DataAccess.activeUser=login.getUserName();
 			DataAccess.nameUser=login.getUserName();
 					
@@ -69,6 +70,7 @@ public class AccessControl {
 		mav.addObject("products", productModel.findAll());
 		mav.addObject("userName", client.getName());
 		mav.addObject("itemsInCart", DataAccess.itemsInCart(client.getUser())); 
+		DataAccess.sesions.put(request.getSession(), client.getUser());
 		DataAccess.activeUser=client.getUser();
 		DataAccess.nameUser = client.getName();
 		

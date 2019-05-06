@@ -22,46 +22,50 @@ import com.eib.shopping.beans.ClientBean;
 import com.eib.shopping.data.DataAccess;
 
 @Controller
-@RequestMapping(value = {"product", "/buy", "/buy/"})
+@RequestMapping(value ="product")
 public class ProductController {
 
 	
 	@RequestMapping(value = "index", method = RequestMethod.GET) 
-	public ModelAndView index() { 
+	public ModelAndView index(HttpServletRequest request, HttpServletResponse response) { 
 		
 		ProductModel productModel = new ProductModel();
 		
 		ModelAndView mav = new ModelAndView("products/index");
 		mav.addObject("products", productModel.findAll());
-		mav.addObject("userName", DataAccess.nameUser);
-		mav.addObject("itemsInCart", DataAccess.itemsInCart(DataAccess.activeUser)); 
+		//mav.addObject("userName", DataAccess.nameUser);
+		mav.addObject("userName", DataAccess.sesions.get(request.getSession()));
+		mav.addObject("itemsInCart", DataAccess.itemsInCart(DataAccess.sesions.get(request.getSession()))); 
 		return mav; 
 	}
 	 
 	
 	@RequestMapping(value = "buy/{id}", method = RequestMethod.GET)
-	public ModelAndView buy(@PathVariable("id") String id, HttpServletResponse response) {
+	public ModelAndView buy(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
 		
 		ProductModel productModel = new ProductModel();
 		
-		if(DataAccess.activeUser!=null) {
-			if(DataAccess.cartClient.get(DataAccess.activeUser) == null) {
-				DataAccess.cartClient.put(DataAccess.activeUser, new HashMap<String,Item>());
-				DataAccess.cartClient.get(DataAccess.activeUser).put(id, new Item(productModel.find(id),1)); 
+		//String user = DataAccess.activeUser;
+		String user = DataAccess.sesions.get(request.getSession());
+		
+		if(user!=null) {
+			if(DataAccess.cartClient.get(user) == null) {
+				DataAccess.cartClient.put(user, new HashMap<String,Item>());
+				DataAccess.cartClient.get(user).put(id, new Item(productModel.find(id),1)); 
 			}else {
-				if(DataAccess.cartClient.get(DataAccess.activeUser).get(id)!=null)
-					DataAccess.cartClient.get(DataAccess.activeUser).get(id).setQuantity(DataAccess.cartClient.get(DataAccess.activeUser).get(id).getQuantity() + 1);
+				if(DataAccess.cartClient.get(user).get(id)!=null)
+					DataAccess.cartClient.get(user).get(id).setQuantity(DataAccess.cartClient.get(user).get(id).getQuantity() + 1);
 				else {
-					DataAccess.cartClient.get(DataAccess.activeUser).put(id, new Item(productModel.find(id),1));
+					DataAccess.cartClient.get(user).put(id, new Item(productModel.find(id),1));
 				}
 			}
 		}
 		
-		ModelAndView mav = new ModelAndView("products/index");
+		ModelAndView mav = new ModelAndView("redirect:/product/index");
 		mav.addObject("products", productModel.findAll());
-		mav.addObject("userName", DataAccess.nameUser);
-		mav.addObject("itemsInCart", DataAccess.itemsInCart(DataAccess.activeUser)); 
-			
+		mav.addObject("userName", user);
+		mav.addObject("itemsInCart", DataAccess.itemsInCart(user)); 
+		
 		return mav;
 	}
 	
