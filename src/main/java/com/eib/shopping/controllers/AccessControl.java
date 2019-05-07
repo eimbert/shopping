@@ -37,7 +37,7 @@ public class AccessControl {
 			mav.addObject("products", productModel.findAll());
 			mav.addObject("itemsInCart", DataAccess.itemsInCart(login.getUserName())); 
 			DataAccess.sesions.put(request.getSession(), login.getUserName());
-			DataAccess.activeUser=login.getUserName();
+			//DataAccess.activeUser=login.getUserName();
 			DataAccess.nameUser=login.getUserName();
 					
 			return mav;
@@ -71,7 +71,7 @@ public class AccessControl {
 		mav.addObject("userName", client.getName());
 		mav.addObject("itemsInCart", DataAccess.itemsInCart(client.getUser())); 
 		DataAccess.sesions.put(request.getSession(), client.getUser());
-		DataAccess.activeUser=client.getUser();
+		//DataAccess.activeUser=client.getUser();
 		DataAccess.nameUser = client.getName();
 		
 		return mav;

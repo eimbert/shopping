@@ -38,7 +38,7 @@ public class CartController {
 	@RequestMapping(value = "add/{id}", method = RequestMethod.GET)
 	public ModelAndView add(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
 		
-		DataAccess.cartClient.get(DataAccess.activeUser).get(id).addQuantity();
+		DataAccess.cartClient.get(DataAccess.sesions.get(request.getSession())).get(id).addQuantity();
 		
 		ModelAndView mav = new ModelAndView("redirect:/cart/index");
 		mav.addObject("userName", DataAccess.sesions.get(request.getSession()));
@@ -50,7 +50,7 @@ public class CartController {
 	@RequestMapping(value = "minus/{id}", method = RequestMethod.GET)
 	public ModelAndView minus(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
 		
-		DataAccess.cartClient.get(DataAccess.activeUser).get(id).minusQuantity();
+		DataAccess.cartClient.get(DataAccess.sesions.get(request.getSession())).get(id).minusQuantity();
 		
 		ModelAndView mav = new ModelAndView("redirect:/cart/index");
 		mav.addObject("userName", DataAccess.sesions.get(request.getSession()));
@@ -62,7 +62,7 @@ public class CartController {
 	@RequestMapping(value = "remove/{id}", method = RequestMethod.GET)
 	public ModelAndView remove(@PathVariable("id") String id,HttpServletRequest request, HttpServletResponse response) {
 		
-		DataAccess.cartClient.get(DataAccess.activeUser).remove(id);
+		DataAccess.cartClient.get(DataAccess.sesions.get(request.getSession())).remove(id);
 		
 		ModelAndView mav = new ModelAndView("redirect:/cart/index");
 		mav.addObject("userName", DataAccess.sesions.get(request.getSession()));
