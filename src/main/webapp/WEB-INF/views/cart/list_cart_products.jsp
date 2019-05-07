@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
 <title>Cesta de la compra</title>
@@ -59,19 +60,22 @@
 						href="${pageContext.request.contextPath }/cart/remove/${item.product.id }">Remove</a></td>
 					<td>${item.product.id }</td>
 					<td>${item.product.name }</td>
-					<td>${item.product.price }</td>
+					<td align="right"><fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2" value="${item.product.price }"/></td>
 					<td><a class="btn btn-sm"
 						href="${pageContext.request.contextPath }/cart/add/${item.product.id }"
 						role="button">+</a>&nbsp;${item.quantity }&nbsp; <a
 						class="btn btn-sm"
 						href="${pageContext.request.contextPath }/cart/minus/${item.product.id }"
 						role="button">-</a></td>
-					<td>${item.product.price * item.quantity }</td>
+					<td align="right"><fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2" value="${item.product.price * item.quantity }"/></td>
 				</tr>
 			</c:forEach>
 			<tr>
 				<td colspan="5" align="right">Total:</td>
-				<td>${total }</td>
+				<td align="right">
+					<fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2"  value="${total }"/> 
+					
+				</td>
 			</tr>
 		</table>
 
@@ -103,16 +107,16 @@
 							</tr>
 							<tr>
 								<td align="right"><a>Precio de los artículos:</a>&nbsp;</td>
-								<td>${total }</td>
+								<td align="right"><fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2" value="${total}"/></td>
 							</tr>
 							<tr>
 								<td align="right"><a>IVA 21%:</a>&nbsp;</td>
-								<td>${total * 0.21 }</td>
+								<td align="right"><fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2" value="${total * 0.21 }"/></td>
 								
 							</tr>
 							<tr>
 								<td align="right"><a>Total:</a>&nbsp;</td>
-								<td>${total * 1.21 }</td>
+								<td align="right"><fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2" value="${total * 1.21 }"/></td>
 							</tr>
 						</table>
 					</div>
